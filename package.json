@@ -1,7 +1,7 @@
 {
-  "name": "growi-plugin-google-calendar",
+  "name": "growi-plugin-calendar-embed",
   "version": "1.0.0",
-  "description": "GROWI plugin for embed Google Calendar",
+  "description": "GROWI plugin for embed calendar",
   "license": "MIT",
   "keywords": [
     "growi",
