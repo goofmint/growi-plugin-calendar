@@ -1,7 +1,7 @@
 {
-  "name": "growi-plugin-remark-youtube",
+  "name": "growi-plugin-google-calendar",
   "version": "1.0.0",
-  "description": "GROWI plugin template for script",
+  "description": "GROWI plugin for embed Google Calendar",
   "license": "MIT",
   "keywords": [
     "growi",
