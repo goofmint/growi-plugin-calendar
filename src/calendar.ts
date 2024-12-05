@@ -14,6 +14,15 @@ interface GrowiNode extends Node {
 }
 
 export const plugin: Plugin = function() {
+  const getPagePath = async() => {
+    if (window.location.pathname === '/') return '/';
+    const pageId = window.location.pathname.replace(/\//, '');
+    const res = await fetch(`/_api/v3/page?pageId=${pageId}`);
+    const json = await res.json();
+    const { path } = json.page;
+    return `${path}/`;
+  };
+
   return (tree) => {
     visit(tree, (node) => {
       const n = node as unknown as GrowiNode;
@@ -24,7 +33,6 @@ export const plugin: Plugin = function() {
           const separator = n.attributes.separator || '/';
           n.type = 'html';
           n.value = '<div id="calendar"></div>';
-          console.log(month, year, lang);
           let clicked = false;
           const id = setInterval(() => {
             if (document.querySelector('#calendar') != null) {
@@ -32,8 +40,8 @@ export const plugin: Plugin = function() {
                 settings: {
                   lang,
                   selected: {
-                    month: isNaN(month as unknown as number) ? new Date().getMonth() : parseInt(month) - 1,
-                    year: isNaN(year as unknown as number) ? new Date().getFullYear() : parseInt(year),
+                    month: Number.isNaN(month as unknown as number) ? new Date().getMonth() : parseInt(month) - 1,
+                    year: Number.isNaN(Number(year)) ? new Date().getFullYear() : parseInt(year),
                   },
                 },
                 actions: {
@@ -42,7 +50,7 @@ export const plugin: Plugin = function() {
                     clicked = true;
                     const page = self.selectedDates[0].replaceAll(/-/g, separator);
                     const path = await getPagePath();
-                    location.href = `${path}${page}`;
+                    window.location.href = `${path}${page}`;
                   },
                 },
               });
@@ -57,14 +65,5 @@ export const plugin: Plugin = function() {
         n.value = `<div style="color: red;">Error: ${(e as Error).message}</div>`;
       }
     });
-
-    const getPagePath = async() => {
-      if (location.pathname === '/') return '/';
-      const pageId = location.pathname.replace(/\//, '');
-      const res = await fetch(`/_api/v3/page?pageId=${pageId}`);
-      const json = await res.json();
-      const { path } = json.page;
-      return `${path}/`;
-    };
   };
 };
